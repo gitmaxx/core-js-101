@@ -78,7 +78,7 @@ describe('07-promises-tasks', () => {
   }, true);
 
   it.optional('function processAllPromises should return correct Promise that will be resolved with array of values', (done) => {
-    const arrayForPromise = new Array(10).fill(0).map((_, idx) => idx);
+    const arrayForPromise = new Array(1000).fill(0).map((_, idx) => idx);
     const result1 = tasks.processAllPromises(arrayForPromise.map((item) => Promise.resolve(item)));
     const result2 = tasks.processAllPromises(arrayForPromise.map((item) => (item % 2
       ? Promise.resolve(item)

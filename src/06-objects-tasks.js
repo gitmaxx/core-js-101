@@ -56,7 +56,17 @@ function getJSON(obj) {
  *
  */
 function fromJSON(proto, json) {
-  return Object.create(proto, JSON.parse(json));
+  const s = JSON.parse(json);
+  Object.keys(s).forEach((key) => {
+    const v = s[key];
+    s[key] = { value: 0 };
+    s[key].value = v;
+    s[key].writable = true;
+    s[key].enumerable = true;
+    s[key].configurable = true;
+  });
+  const g = Object.create(proto, s);
+  return g;
 }
 
 
@@ -115,6 +125,7 @@ function fromJSON(proto, json) {
  */
 
 const cssSelectorBuilder = {
+  /* eslint-disable */
   element(/* value */) {
     throw new Error('Not implemented');
   },

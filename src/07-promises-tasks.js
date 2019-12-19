@@ -53,11 +53,11 @@ function willYouMarryMe(isPositiveAnswer) {
  *
  */
 function processAllPromises(array) {
-  /* eslint-disable */
   return new Promise((resolve, reject) => {
-    const t = array.reduce((result, item) =>
-      item.then((res) => result.push(res)).catch((e) =>  reject(new Error(e))), []);
-    resolve(t);
+    const f = [];
+    array.map((item) => item.then((res) => f.push(res)).catch((e) => new Error(e)));
+    resolve(f);
+    reject(f);
   });
 }
 
@@ -81,9 +81,16 @@ function processAllPromises(array) {
  *    })
  *
  */
-function getFastestPromise(/* array */) {
-  throw new Error('Not implemented');
+function getFastestPromise(array) {
+  /* eslint-disable */
+  return new Promise((resolve, reject) => {
+    const invert  = p  => new Promise((res, rej) => p.then(rej, res));
+    const firstOf = invert(Promise.all(array.map(invert)));
+    resolve(firstOf);
+    reject(firstOf[0]);
+  });
 }
+
 
 /**
  * Return Promise object that should be resolved with value that is
