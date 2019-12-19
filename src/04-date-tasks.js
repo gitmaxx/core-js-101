@@ -117,9 +117,9 @@ function timeSpanToString(startDate, endDate) {
  */
 function angleBetweenClockHands(date) {
   const min = date.getUTCMinutes() / 60;
-  const hour = ((date.getUTCHours() % 12) / 12) + (min / 12);
+  const hour = ((date.getUTCHours() % 12) + date.getUTCMinutes() / 60) / 12;
   const diff = Math.abs(hour - min);
-  if (diff < 0.5) { return diff * 2 * Math.PI; }
+  if (diff < 0.5) { return 2 * diff * Math.PI; }
   return (1 - diff) * 2 * Math.PI;
 }
 
