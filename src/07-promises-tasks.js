@@ -82,13 +82,7 @@ function processAllPromises(array) {
  *
  */
 function getFastestPromise(array) {
-  /* eslint-disable */
-  return new Promise((resolve, reject) => {
-    const invert  = p  => new Promise((res, rej) => p.then(rej, res));
-    const firstOf = invert(Promise.all(array.map(invert)));
-    resolve(firstOf);
-    reject(firstOf[0]);
-  });
+  return Promise.race(array);
 }
 
 
@@ -109,8 +103,16 @@ function getFastestPromise(array) {
  *    });
  *
  */
-function chainPromises(/* array, action */) {
-  throw new Error('Not implemented');
+function chainPromises(array, action) {
+  return new Promise((resolve, reject) => {
+    const p = array.reduce((promiseChain,
+      currentTask) => promiseChain.then(
+      (chainResults) => currentTask.then((currentResult) => [...chainResults,
+        currentResult]),
+    ), Promise.resolve([]));
+    const f = p.then((item) => item.reduce((res, it) => action(res, it))).catch((e) => reject(e));
+    resolve(f);
+  });
 }
 
 module.exports = {

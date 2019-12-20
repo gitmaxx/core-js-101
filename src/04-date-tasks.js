@@ -84,18 +84,7 @@ function isLeapYear(date) {
  *    Date(2000,1,1,10,0,0),  Date(2000,1,1,15,20,10,453)   => "05:20:10.453"
  */
 function timeSpanToString(startDate, endDate) {
-  // let diff = endDate.getTime() - startDate.getTime();
-  // const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-  // diff -= days * (1000 * 60 * 60 * 24);
-  // const hours = Math.floor(diff / (1000 * 60 * 60));
-  // diff -= hours * (1000 * 60 * 60);
-  // const mins = Math.floor(diff / (1000 * 60));
-  // diff -= mins * (1000 * 60);
-  // const seconds = Math.floor(diff / (1000));
-  // diff -= seconds * (1000);
-  // return `${hours}:${mins}: + " minutes, " + seconds + " seconds")`;
   const t = new Date(endDate - startDate);
-  // return`${t.getUTCHours()}:${t.getUTCMinutes()}:${t.getUTCSeconds()}:${t.getUTCMilliseconds()}`;
   return `${t.toLocaleTimeString('en-GB',
     { timeZone: 'UTC', timestyle: 'full', hour12: false })}.${Math.abs(endDate.getMilliseconds() - startDate.getMilliseconds()).toString().padStart(3, '0')}`;
 }
@@ -116,11 +105,10 @@ function timeSpanToString(startDate, endDate) {
  *    Date.UTC(2016,3,5,21, 0) => Math.PI/2
  */
 function angleBetweenClockHands(date) {
-  const min = date.getUTCMinutes() / 60;
-  const hour = ((date.getUTCHours() % 12) + date.getUTCMinutes() / 60) / 12;
-  const diff = Math.abs(hour - min);
-  if (diff < 0.5) { return 2 * diff * Math.PI; }
-  return (1 - diff) * 2 * Math.PI;
+  const diff = Math.abs(date.getUTCMinutes() / 2 + (date.getUTCHours() % 12)
+   * 30 - 6 * date.getUTCMinutes());
+  if (diff < 180) { return (diff * Math.PI) / 180; }
+  return ((360 - diff) * Math.PI) / 180;
 }
 
 
